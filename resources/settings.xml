@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="32000">
+		<setting id="HLSQUALITY" type="enum" label="32010" values="Lowest (160k/s)|Low (414k/s) |Medium (698k/s)|High (1.2Mb/s)" default="3" />
+    </category>
+</settings>

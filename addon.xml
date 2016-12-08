@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<addon id="plugin.video.9now" name="9now" provider-name="Glenn Guy" version="1.0.0">
+  <requires>
+    <import addon="xbmc.python" version="2.1.0"/>
+    <import addon="script.module.simplejson"/>
+  </requires>
+  <extension library="default.py" point="xbmc.python.pluginsource" provides="video">
+    <provides>video</provides>
+  </extension>
+  <extension library="default.py" point="xbmc.addon.metadata">
+    <summary>9now add-on</summary>
+    <description>Watch live TV and catch up on all videos offered by the 9now service</description>
+    <provides>video</provides>
+    <platform>all</platform>
+  </extension>
+</addon>
