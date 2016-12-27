@@ -21,7 +21,6 @@ import comm
 import sys
 import config
 import urllib2
-import utils
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -40,7 +39,9 @@ def play_video(params):
         play_item = xbmcgui.ListItem(path=url)
         
     else:
-        if utils.check_inputstream():
+        import wvhelper
+        
+        if wvhelper.check_inputstream():
         
             drm_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT, 
                                                    params['drm_id'])
@@ -51,6 +52,6 @@ def play_video(params):
             play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
             play_item.setProperty('inputstream.adaptive.license_key', widevine['key']+'|Content-Type=application%2Fx-www-form-urlencoded|A{SSM}|')
         else:
-            xbmcplugin.setResolvedUrl(_handle, False, xbmcgui.ListItem(path=None))
+            xbmcplugin.setResolvedUrl(_handle, True, xbmcgui.ListItem(path=None))
             return
     xbmcplugin.setResolvedUrl(_handle, True, play_item)
