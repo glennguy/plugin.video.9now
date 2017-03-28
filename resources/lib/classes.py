@@ -96,7 +96,7 @@ class episode(object):
         self.episode_name = None
         self.url = None
         self.id = None
-        self.drm_id = None
+        self.drm = None
         self.license_url = None
         self.license_key = None
     
@@ -135,7 +135,7 @@ class channel(object):
         self.episode_name = None
         self.url = None
         self.id = None
-        self.drm_id = None
+        self.drm = None
     
     def get_title(self):
         return '{0} - {1}'.format(self.title, self.desc)

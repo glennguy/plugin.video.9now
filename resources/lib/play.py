@@ -27,27 +27,20 @@ _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 def play_video(params):
+    xbmc.log(str(params))
+    xbmc.log('askdjhaskdjhsad')
     """ Determine content and pass url to Kodi for playback"""
     if params['action'] == 'listchannels':
         json_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT, 
                                                   params['id'])
-        url = comm.get_live_stream(json_url)
+        url = comm.get_stream(json_url, live=True)
         play_item = xbmcgui.ListItem(path=url)
         
-    elif params['drm_id'] == 'None':
-        
-        m3u8 = config.BRIGHTCOVE_URL.format(params['id'])
-        data = urllib2.urlopen(m3u8).read().splitlines()
-        url = utils.parse_m3u8(data)
-        play_item = xbmcgui.ListItem(path=url)
-        
-    else:
+    elif params['drm'] == 'True':
         import wvhelper
-        
         if wvhelper.check_inputstream():
-        
-            drm_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT, 
-                                                   params['drm_id'])
+            acc = config.BRIGHTCOVE_ACCOUNT
+            drm_url = config.BRIGHTCOVE_DRM_URL.format(acc, params['id'])
             widevine = comm.get_widevine_auth(drm_url)
             url = widevine['url']
             play_item = xbmcgui.ListItem(path=url)
@@ -57,4 +50,13 @@ def play_video(params):
         else:
             xbmcplugin.setResolvedUrl(_handle, True, xbmcgui.ListItem(path=None))
             return
+
+    else:
+        json_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT, 
+                                                  params['id'])
+        m3u8 = comm.get_stream(json_url)
+        data = urllib2.urlopen(m3u8).read().splitlines()
+        url = utils.parse_m3u8(data, m3u8_path=m3u8)
+        play_item = xbmcgui.ListItem(path=url)
+
     xbmcplugin.setResolvedUrl(_handle, True, play_item)

@@ -98,9 +98,8 @@ def list_episodes(params):
             e.desc = episode['description']
             e.duration = episode['video']['duration']//1000
             e.airdate = episode['airDate']
-            e.id = episode['video']['brightcoveId']
-            if episode['video']['drm'] == True:
-                e.drm_id = episode['video']['referenceId']
+            e.id = episode['video']['referenceId']
+            e.drm = episode['video']['drm'] == True
             listing.append(e)
     return listing
 
@@ -123,14 +122,29 @@ def list_live(params):
         listing.append(c)
     return listing
 
-def get_live_stream(url):
+def get_stream(url, live=False):
     """ Parse live tv JSON and return stream url""" 
     req = urllib2.Request(url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY} )
     xbmc.log('Fetching URL: {}'.format(url))
     res = urllib2.urlopen(req).read()
     data = json.loads(res)
-    url = data['sources'][0]['src']
-    return url
+    if live:
+        return data['sources'][0]['src']
+    else:
+        url = ''
+        for source in data.get('sources'):
+            if (source.get('container') == 'M2TS' or 
+                source.get('type') == 'application/vnd.apple.mpegurl'):
+                if 'https' in source.get('src'):
+                    url = source.get('src')
+                    if url:
+                        return url
+            
+        
+        
+        
+            
+            
 
 def get_widevine_auth(drm_url):
     """ Parse DRM JSON and return license auth URL and manifest URL"""
