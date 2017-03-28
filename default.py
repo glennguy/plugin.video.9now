@@ -64,7 +64,7 @@ def router(paramstring):
     """ Router function that calls other functions depending on the 
     provided paramstring"""
     params = dict(parse_qsl(paramstring))
-    if params:
+    if 'action' in params:
         if params['action'] == 'listcategories':
             if params['category'] == 'Genres':
                 genres.make_genres_list(paramstring)

@@ -2,8 +2,7 @@
 <addon id="plugin.video.9now" name="9now" provider-name="Glenn Guy" version="1.0.0">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
-    <import addon="script.module.simplejson"/>
-    <import addon="script.module.requests" version="2.9.1"/>
+    <import addon="script.module.requests"/>
   </requires>
   <extension library="default.py" point="xbmc.python.pluginsource" provides="video">
     <provides>video</provides>

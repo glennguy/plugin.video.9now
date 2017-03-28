@@ -75,27 +75,33 @@ def list_episodes(params):
     data = json.loads(res)
     listing = []
     for section in data['items']:
-        if section['callToAction']:
-            pass
-        else:
-            continue
-        if section['callToAction']['link']['type'] != 'episode-index':
-            continue
-        else:
-            for episode in section['items']:
-                e = classes.episode()
-                e.episode_no = str(episode['episodeNumber'])
-                e.thumb = episode['image']['sizes']['w480']
-                e.fanart = data['tvSeries']['image']['sizes']['w1920']
-                e.episode_name = episode['name'].encode('utf8')
-                e.title = e.get_title()
-                e.desc = episode['description']
-                e.duration = episode['video']['duration']//1000
-                e.airdate = episode['airDate']
-                e.id = episode['video']['brightcoveId']
-                if episode['video']['drm'] == True:
-                    e.drm_id = episode['video']['referenceId']
-                listing.append(e)
+        # filter extras etc for most shows.
+        if section.get('callToAction'):
+            if (section['callToAction']['link']['type'] not in 
+                ['episode-index', 'external']):
+                continue
+        for episode in section['items']:
+            # filter extras again as some show are unable to be filtered at the
+            # previous step
+            if not episode.get('episodeNumber'):
+                continue
+            # make sure season numbers match, some shows return all seasons.
+            if episode['partOfSeason'].get('slug') != params['season_slug']:
+                continue
+            
+            e = classes.episode()
+            e.episode_no = str(episode['episodeNumber'])
+            e.thumb = episode['image']['sizes']['w480']
+            e.fanart = data['tvSeries']['image']['sizes']['w1920']
+            e.episode_name = episode['name'].encode('utf8')
+            e.title = e.get_title()
+            e.desc = episode['description']
+            e.duration = episode['video']['duration']//1000
+            e.airdate = episode['airDate']
+            e.id = episode['video']['brightcoveId']
+            if episode['video']['drm'] == True:
+                e.drm_id = episode['video']['referenceId']
+            listing.append(e)
     return listing
 
 def list_live(params):
