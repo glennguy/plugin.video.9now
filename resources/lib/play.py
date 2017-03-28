@@ -18,8 +18,9 @@ import xbmc
 import xbmcgui
 import xbmcplugin
 import comm
-import sys
+import utils
 import config
+import sys
 import urllib2
 
 _url = sys.argv[0]
@@ -35,7 +36,9 @@ def play_video(params):
         
     elif params['drm_id'] == 'None':
         
-        url = config.BRIGHTCOVE_URL.format(params['id'])
+        m3u8 = config.BRIGHTCOVE_URL.format(params['id'])
+        data = urllib2.urlopen(m3u8).read().splitlines()
+        url = utils.parse_m3u8(data)
         play_item = xbmcgui.ListItem(path=url)
         
     else:

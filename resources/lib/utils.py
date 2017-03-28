@@ -21,6 +21,33 @@ import xbmcgui
 import xbmcaddon
 import config
 
+def parse_m3u8(data, qual=-1):
+    """ Parse the retrieved m3u8 stream list into a list of dictionaries
+        then return the url for the highest quality stream."""
+    if '#EXT-X-VERSION:3' in data:
+        data.remove('#EXT-X-VERSION:3')
+    count = 1
+    m3u_list = []
+
+    while count < len(data):
+        line = data[count]
+        line = line.strip('#EXT-X-STREAM-INF:')
+        line = line.strip('PROGRAM-ID=1,')
+        line = line[:line.find('CODECS')]
+
+        if line.endswith(','):
+            line = line[:-1]
+
+        line = line.strip()
+        line = line.split(',')
+        linelist = [i.split('=') for i in line]
+        linelist.append(['URL', data[count + 1]])
+        m3u_list.append(dict((i[0], i[1]) for i in linelist))
+        count += 2
+    sorted_m3u_list = sorted(m3u_list, key=lambda k: int(k['BANDWIDTH']))
+    stream = sorted_m3u_list[qual]['URL']
+    return stream
+
 def check_inputstream():
     """ Make sure all components required are available for DRM playback.
         Inform of missing components"""
