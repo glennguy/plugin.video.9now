@@ -14,30 +14,27 @@
 # You should have received a copy of the GNU General Public License
 # along with 9now.  If not, see <http://www.gnu.org/licenses/>.
 
-import xbmc
 import xbmcgui
 import xbmcplugin
 import comm
 import sys
-import urlparse
-import urllib
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
+
 def make_genres_list(url):
     """ Make list of genre Listitems for Kodi"""
-    params = dict(urlparse.parse_qsl(url))
     genres = comm.list_genres()
     listing = []
     for g in genres:
         li = xbmcgui.ListItem(g.title, iconImage=g.thumb,
-                                    thumbnailImage=g.thumb)
+                              thumbnailImage=g.thumb)
         li.setArt({'fanart': g.fanart})
         url = '{0}?action=listgenres{1}'.format(_url, g.make_kodi_url())
         is_folder = True
         listing.append((url, li, is_folder))
-            
+
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
     xbmcplugin.endOfDirectory(_handle)

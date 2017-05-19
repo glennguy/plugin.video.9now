@@ -15,23 +15,25 @@
 # along with 9now.  If not, see <http://www.gnu.org/licenses/>.
 
 import xbmc
-import xbmcgui
-import xbmcplugin
 import classes
 import config
-import urllib
 import urllib2
 import json
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
 
 def list_series():
-    """ Create and return list of series objects"""
+    """
+    Create and return list of series objects
+    """
     req = config.TVSERIES_URL
     res = urllib2.urlopen(req)
     data = json.loads(res.read())
     listing = []
     for show in data['items']:
         x = len(show['containsSeason'])
-        if x > 1: 
+        if x > 1:
             multi_season = True
         else:
             multi_season = False
@@ -50,8 +52,11 @@ def list_series():
             x -= 1
     return listing
 
+
 def list_genres():
-    """ Create and return list of genre objects"""
+    """
+    Create and return list of genre objects
+    """
     req = config.GENRES_URL
     res = urllib2.urlopen(req)
     data = json.loads(res.read())
@@ -66,9 +71,13 @@ def list_genres():
         listing.append(g)
     return listing
 
+
 def list_episodes(params):
-    """ Create and return list of episode objects"""       
-    requrl = config.EPISODEQUERY_URL.format(params['series_slug'], params['season_slug'])
+    """
+    Create and return list of episode objects
+    """
+    requrl = config.EPISODEQUERY_URL.format(params['series_slug'],
+                                            params['season_slug'])
     req = urllib2.Request(requrl)
     xbmc.log('Fetching URL: {}'.format(requrl))
     res = urllib2.urlopen(req).read()
@@ -77,8 +86,8 @@ def list_episodes(params):
     for section in data['items']:
         # filter extras etc for most shows.
         if section.get('callToAction'):
-            if (section['callToAction']['link']['type'] not in 
-                ['episode-index', 'external']):
+            if (section['callToAction']['link']['type'] not in
+               ['episode-index', 'external']):
                 continue
         for episode in section['items']:
             # filter extras again as some show are unable to be filtered at the
@@ -88,7 +97,7 @@ def list_episodes(params):
             # make sure season numbers match, some shows return all seasons.
             if episode['partOfSeason'].get('slug') != params['season_slug']:
                 continue
-            
+
             e = classes.episode()
             e.episode_no = str(episode['episodeNumber'])
             e.thumb = episode['image']['sizes']['w480']
@@ -99,15 +108,18 @@ def list_episodes(params):
             e.duration = episode['video']['duration']//1000
             e.airdate = episode['airDate']
             e.id = episode['video']['referenceId']
-            e.drm = episode['video']['drm'] == True
+            e.drm = episode['video']['drm'] is True
             listing.append(e)
     return listing
 
+
 def list_live(params):
-    """ Create and return list of channel objects""" 
+    """
+    Create and return list of channel objects
+    """
     requrl = config.LIVETV_URL
     req = urllib2.Request(requrl)
-    xbmc.log('Fetching URL: {}'.format(requrl))
+    xbmc.log('Fetching URL: {0}'.format(requrl))
     res = urllib2.urlopen(req).read()
     data = json.loads(res)
     listing = []
@@ -122,9 +134,11 @@ def list_live(params):
         listing.append(c)
     return listing
 
+
 def get_stream(url, live=False):
-    """ Parse live tv JSON and return stream url""" 
-    req = urllib2.Request(url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY} )
+    """Parse live tv JSON and return stream url
+    """
+    req = urllib2.Request(url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY})
     xbmc.log('Fetching URL: {}'.format(url))
     res = urllib2.urlopen(req).read()
     data = json.loads(res)
@@ -133,22 +147,20 @@ def get_stream(url, live=False):
     else:
         url = ''
         for source in data.get('sources'):
-            if (source.get('container') == 'M2TS' or 
-                source.get('type') == 'application/vnd.apple.mpegurl'):
+            if (source.get('container') == 'M2TS' or
+                    source.get('type') == 'application/vnd.apple.mpegurl'):
                 if 'https' in source.get('src'):
                     url = source.get('src')
                     if url:
                         return url
-            
-        
-        
-        
-            
-            
+
 
 def get_widevine_auth(drm_url):
-    """ Parse DRM JSON and return license auth URL and manifest URL"""
-    req = urllib2.Request(drm_url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY} )
+    """
+    Parse DRM JSON and return license auth URL and manifest URL
+    """
+    req = urllib2.Request(
+        drm_url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY})
     xbmc.log('Fetching URL: {}'.format(drm_url))
     res = urllib2.urlopen(req).read()
     data = json.loads(res)
@@ -157,4 +169,3 @@ def get_widevine_auth(drm_url):
             url = source['src']
             key = source['key_systems']['com.widevine.alpha']['license_url']
             return {'url': url, 'key': key}
-

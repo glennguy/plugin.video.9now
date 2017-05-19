@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-    <string id="32000">Settings</string>
-    <string id="32010">Video Quality</string>
-    
-	
+  <string id="32000">Settings</string>
+  <string id="32001">DRM debugging</string>
+  <string id="32010">Video Quality (non DRM streams)</string>
+  <string id="32033">Reinstall ssd_wv module</string>
+  <string id="32034">Reinstall widevine_cdm module</string>
 </strings>

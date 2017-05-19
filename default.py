@@ -16,14 +16,10 @@
 
 import os
 import sys
-
 import xbmc
 import xbmcgui
 import xbmcaddon
 import xbmcplugin
-
-import urllib
-import urllib2
 from urlparse import parse_qsl
 
 addon = xbmcaddon.Addon()
@@ -31,12 +27,13 @@ cwd = xbmc.translatePath(addon.getAddonInfo('path')).decode("utf-8")
 BASE_RESOURCE_PATH = os.path.join(cwd, 'resources', 'lib')
 sys.path.append(BASE_RESOURCE_PATH)
 
-import config
-import series
-import genres
-import episodes
-import play
-import live
+import config  # noqa: E402
+import series  # noqa: E402
+import genres  # noqa: E402
+import episodes  # noqa: E402
+import play  # noqa: E402
+import live  # noqa: E402
+import drmhelper  # noqa: E402
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -45,8 +42,11 @@ addonname = addon.getAddonInfo('name')
 addonPath = xbmcaddon.Addon().getAddonInfo("path")
 fanart = os.path.join(addonPath, 'fanart.jpg')
 
+
 def list_categories():
-    """ Make initial list"""
+    """
+    Make initial list
+    """
     listing = []
     categories = config.CATEGORIES
     for category in categories:
@@ -55,35 +55,41 @@ def list_categories():
         url = urlString.format(_url, category)
         is_folder = True
         listing.append((url, li, is_folder))
-        
+
     xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
     xbmcplugin.endOfDirectory(_handle)
-              
+
 
 def router(paramstring):
-    """ Router function that calls other functions depending on the 
-    provided paramstring"""
+    """
+    Router function that calls other functions depending on the
+    provided paramstring
+    """
     params = dict(parse_qsl(paramstring))
-    if 'action' in params:
-        if params['action'] == 'listcategories':
-            if params['category'] == 'Genres':
-                genres.make_genres_list(paramstring)
-            elif params['category'] == 'TV Series':
+    if paramstring:
+        if paramstring != 'content_type=video':
+            if params['action'] == 'listcategories':
+                if params['category'] == 'Genres':
+                    genres.make_genres_list(paramstring)
+                elif params['category'] == 'TV Series':
+                    series.make_series_list(paramstring)
+                elif params['category'] == 'Live TV':
+                    live.make_live_list(paramstring)
+            elif params['action'] == 'listgenres':
                 series.make_series_list(paramstring)
-            elif params['category'] == 'Live TV':
-                live.make_live_list(paramstring)
-        elif params['action'] == 'listgenres':
-            series.make_series_list(paramstring)
-            
-        elif params['action'] == 'listseries':
-            episodes.make_episodes_list(paramstring)
-        elif params['action'] == 'listepisodes':
-            play.play_video(params)
-        elif params['action'] == 'listchannels':
-            play.play_video(params)
+            elif params['action'] == 'listseries':
+                episodes.make_episodes_list(paramstring)
+            elif params['action'] == 'listepisodes':
+                play.play_video(params)
+            elif params['action'] == 'listchannels':
+                play.play_video(params)
+            elif params['action'] == 'reinstall_widevine_cdm':
+                drmhelper.get_widevinecdm()
+            elif params['action'] == 'reinstall_ssd_wv':
+                drmhelper.get_ssd_wv()
     else:
         list_categories()
 
+
 if __name__ == '__main__':
     router(sys.argv[2][1:])
-

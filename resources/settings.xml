@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-    <category label="32000">
-		<setting id="HLSQUALITY" type="enum" label="32010" values="Lowest (160k/s)|Low (414k/s) |Medium (698k/s)|High (1.2Mb/s)" default="3" />
-    </category>
+  <category label="32000">
+    <setting id="HLSQUALITY" type="enum" label="32010" values="Lowest 480x270 (260k/s)|Low 640x360 (700k/s) |Medium 640x360 (1.3Mb/s)|High 1024x576 (2.0Mb/s)|Highest 1280x720 (2.7Mb/s)" default="4" />
+  </category>
+  <category label="32001">
+    <setting label="32033" type="action" action="RunPlugin(plugin://plugin.video.9now/?action=reinstall_ssd_wv)"/>
+    <setting label="32034" type="action" action="RunPlugin(plugin://plugin.video.9now/?action=reinstall_widevine_cdm)"/>
+  </category>
 </settings>

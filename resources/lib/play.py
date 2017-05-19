@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with 9now.  If not, see <http://www.gnu.org/licenses/>.
 
-import xbmc
 import xbmcgui
 import xbmcplugin
 import comm
@@ -26,34 +25,40 @@ import urllib2
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
+
 def play_video(params):
-    xbmc.log(str(params))
-    xbmc.log('askdjhaskdjhsad')
-    """ Determine content and pass url to Kodi for playback"""
+    """
+    Determine content and pass url to Kodi for playback
+    """
     if params['action'] == 'listchannels':
-        json_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT, 
-                                                  params['id'])
+        json_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT,
+                                                    params['id'])
         url = comm.get_stream(json_url, live=True)
         play_item = xbmcgui.ListItem(path=url)
-        
+
     elif params['drm'] == 'True':
-        import wvhelper
-        if wvhelper.check_inputstream():
+        import drmhelper
+        if drmhelper.check_inputstream():
             acc = config.BRIGHTCOVE_ACCOUNT
             drm_url = config.BRIGHTCOVE_DRM_URL.format(acc, params['id'])
             widevine = comm.get_widevine_auth(drm_url)
             url = widevine['url']
             play_item = xbmcgui.ListItem(path=url)
             play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-            play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
-            play_item.setProperty('inputstream.adaptive.license_key', widevine['key']+'|Content-Type=application%2Fx-www-form-urlencoded|A{SSM}|')
+            play_item.setProperty('inputstream.adaptive.license_type',
+                                  'com.widevine.alpha')
+            play_item.setProperty(
+                'inputstream.adaptive.license_key',
+                widevine['key']+('|Content-Type=application%2F'
+                                 'x-www-form-urlencoded|A{SSM}|'))
         else:
-            xbmcplugin.setResolvedUrl(_handle, True, xbmcgui.ListItem(path=None))
+            xbmcplugin.setResolvedUrl(
+                _handle, True, xbmcgui.ListItem(path=None))
             return
 
     else:
-        json_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT, 
-                                                  params['id'])
+        json_url = config.BRIGHTCOVE_DRM_URL.format(config.BRIGHTCOVE_ACCOUNT,
+                                                    params['id'])
         m3u8 = comm.get_stream(json_url)
         data = urllib2.urlopen(m3u8).read().splitlines()
         url = utils.parse_m3u8(data, m3u8_path=m3u8)

@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with 9now.  If not, see <http://www.gnu.org/licenses/>.
 
-import xbmc
 import xbmcgui
 import xbmcplugin
 import comm
@@ -24,6 +23,7 @@ import urllib
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
+
 
 def make_series_list(url):
     """ Make list of series Listitems for Kodi"""
@@ -36,20 +36,16 @@ def make_series_list(url):
                 filtered.append(s)
     else:
         filtered = series_list
-    category = params['category']
-    
+
     listing = []
     for s in filtered:
-    
         li = xbmcgui.ListItem(s.title, iconImage=s.thumb,
-                                    thumbnailImage=s.thumb)
+                              thumbnailImage=s.thumb)
         li.setArt({'fanart': s.fanart})
         url = '{0}?action=listseries{1}'.format(_url, s.make_kodi_url())
-        #urlString = '{0}?action=listshows&category={1}&show={2}&season={3}'
-        #url = urlString.format(_url, category, s.series_slug, s.season_slug)
         is_folder = True
         listing.append((url, li, is_folder))
-            
+
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
     xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
     xbmcplugin.endOfDirectory(_handle)

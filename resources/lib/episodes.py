@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with 9now.  If not, see <http://www.gnu.org/licenses/>.
 
-import xbmc
 import xbmcgui
 import xbmcplugin
 import comm
@@ -24,6 +23,7 @@ import urlparse
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
+
 def make_episodes_list(url):
     """ Make list of episode Listitems for Kodi"""
     params = dict(urlparse.parse_qsl(url))
@@ -31,17 +31,16 @@ def make_episodes_list(url):
     listing = []
     for e in episodes:
         li = xbmcgui.ListItem(e.title, iconImage=e.thumb,
-                                thumbnailImage=e.thumb)
+                              thumbnailImage=e.thumb)
         li.setArt({'fanart': e.fanart})
         url = '{0}?action=listepisodes{1}'.format(_url, e.make_kodi_url())
         is_folder = False
         li.setProperty('IsPlayable', 'true')
-        if e.drm == True:
+        if e.drm is True:
             li.setProperty('inputstreamaddon', 'inputstream.adaptive')
-            
-        li.setInfo('video', {'plot': e.desc, 'plotoutline': e.desc, 
+        li.setInfo('video', {'plot': e.desc, 'plotoutline': e.desc,
                              'duration': e.duration, 'date': e.get_airdate()})
         listing.append((url, li, is_folder))
-            
+
     xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
     xbmcplugin.endOfDirectory(_handle)

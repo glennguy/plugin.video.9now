@@ -1,18 +1,14 @@
-# Copyright 2016 Glenn Guy
-# This file is part of 9now Kodi Addon
-#
-# tenplay is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# 9now is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with 9now.  If not, see <http://www.gnu.org/licenses/>.
+# flake8: noqa
+import version
+
+NAME = '9now'
+ADDON_ID = 'plugin.video.9now'
+VERSION = version.VERSION
+
+GITHUB_API_URL = 'https://api.github.com/repos/glennguy/plugin.video.9now'
+ISSUE_API_URL = GITHUB_API_URL + '/issues'
+ISSUE_API_AUTH = 'eGJtY2JvdDo1OTQxNTJjMTBhZGFiNGRlN2M0YWZkZDYwZGQ5NDFkNWY4YmIzOGFj'
+GIST_API_URL = 'https://api.github.com/gists'
 
 CATEGORIES = ['TV Series', 'Genres', 'Live TV']
 GENRES_URL = "https://tv-api.9now.com.au/v1/genres?device=android&take=99999"
