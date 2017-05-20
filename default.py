@@ -1,7 +1,7 @@
 # Copyright 2016 Glenn Guy
 # This file is part of 9now Kodi Addon
 #
-# tenplay is free software: you can redistribute it and/or modify
+# 9now is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -20,6 +20,7 @@ import xbmc
 import xbmcgui
 import xbmcaddon
 import xbmcplugin
+import drmhelper
 from urlparse import parse_qsl
 
 addon = xbmcaddon.Addon()
@@ -33,14 +34,14 @@ import genres  # noqa: E402
 import episodes  # noqa: E402
 import play  # noqa: E402
 import live  # noqa: E402
-import drmhelper  # noqa: E402
+
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
 
 addonname = addon.getAddonInfo('name')
-addonPath = xbmcaddon.Addon().getAddonInfo("path")
-fanart = os.path.join(addonPath, 'fanart.jpg')
+addon_path = xbmcaddon.Addon().getAddonInfo("path")
+fanart = os.path.join(addon_path, 'fanart.jpg')
 
 
 def list_categories():
