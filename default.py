@@ -1,40 +1,20 @@
-# Copyright 2016 Glenn Guy
-# This file is part of 9now Kodi Addon
-#
-# 9now is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# 9now is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with 9now.  If not, see <http://www.gnu.org/licenses/>.
-
 import os
 import sys
 import xbmc
 import xbmcgui
 import xbmcaddon
-import xbmcplugin
 import drmhelper
 from urlparse import parse_qsl
+
+from aussieaddonscommon import utils
 
 addon = xbmcaddon.Addon()
 cwd = xbmc.translatePath(addon.getAddonInfo('path')).decode("utf-8")
 BASE_RESOURCE_PATH = os.path.join(cwd, 'resources', 'lib')
 sys.path.append(BASE_RESOURCE_PATH)
 
-import config  # noqa: E402
-import series  # noqa: E402
-import genres  # noqa: E402
-import episodes  # noqa: E402
+import menu  # noqa: E402
 import play  # noqa: E402
-import live  # noqa: E402
-
 
 _url = sys.argv[0]
 _handle = int(sys.argv[1])
@@ -42,23 +22,6 @@ _handle = int(sys.argv[1])
 addonname = addon.getAddonInfo('name')
 addon_path = xbmcaddon.Addon().getAddonInfo("path")
 fanart = os.path.join(addon_path, 'fanart.jpg')
-
-
-def list_categories():
-    """
-    Make initial list
-    """
-    listing = []
-    categories = config.CATEGORIES
-    for category in categories:
-        li = xbmcgui.ListItem(category)
-        urlString = '{0}?action=listcategories&category={1}'
-        url = urlString.format(_url, category)
-        is_folder = True
-        listing.append((url, li, is_folder))
-
-    xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
-    xbmcplugin.endOfDirectory(_handle)
 
 
 def router(paramstring):
@@ -70,26 +33,42 @@ def router(paramstring):
     if paramstring:
         if paramstring != 'content_type=video':
             if params['action'] == 'listcategories':
-                if params['category'] == 'Genres':
-                    genres.make_genres_list(paramstring)
-                elif params['category'] == 'TV Series':
-                    series.make_series_list(paramstring)
+                if params['category'] == 'All Shows':
+                    menu.make_series_list(paramstring)
                 elif params['category'] == 'Live TV':
-                    live.make_live_list(paramstring)
-            elif params['action'] == 'listgenres':
-                series.make_series_list(paramstring)
+                    menu.make_live_list(paramstring)
+                else:
+                    menu.make_series_list(paramstring)
             elif params['action'] == 'listseries':
-                episodes.make_episodes_list(paramstring)
+                menu.make_episodes_list(paramstring)
             elif params['action'] == 'listepisodes':
                 play.play_video(params)
             elif params['action'] == 'listchannels':
                 play.play_video(params)
+            elif params['action'] == 'settings':
+                xbmcaddon.Addon().openSettings()
             elif params['action'] == 'reinstall_widevine_cdm':
                 drmhelper.get_widevinecdm()
             elif params['action'] == 'reinstall_ssd_wv':
                 drmhelper.get_ssd_wv()
+            elif params['action'] == 'sendreport':
+                utils.user_report()
+            elif params['action'] == 'update_ia':
+                addon = drmhelper.get_addon(drm=False)
+                if not drmhelper.is_ia_current(addon, latest=True):
+                    if xbmcgui.Dialog().yesno(
+                        'Upgrade?', ('Newer version of inputstream.adaptive '
+                                     'available ({0}) - would you like to '
+                                     'upgrade to this version?'.format(
+                                        drmhelper.get_latest_ia_ver()))):
+                        drmhelper.get_ia_direct(update=True, drm=False)
+                else:
+                    ver = addon.getAddonInfo('version')
+                    utils.dialog_message('Up to date: Inputstream.adaptive '
+                                         'version {0} installed and enabled.'
+                                         ''.format(ver))
     else:
-        list_categories()
+        menu.list_categories()
 
 
 if __name__ == '__main__':

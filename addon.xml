@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
-<addon id="plugin.video.9now" name="9now" provider-name="Glenn Guy" version="1.0.0">
+<addon id="plugin.video.catchuptv.au.nine" name="9Now" provider-name="Aussie Add-ons" version="1.0.0">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.requests"/>
     <import addon="script.module.drmhelper"/>
-    <import addon="script.module.issuereporter"/>
+    <import addon="script.module.aussieaddonscommon"/>
   </requires>
   <extension library="default.py" point="xbmc.python.pluginsource" provides="video">
     <provides>video</provides>

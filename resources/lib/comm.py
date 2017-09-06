@@ -1,19 +1,3 @@
-# Copyright 2016 Glenn Guy
-# This file is part of 9now Kodi Addon
-#
-# 9now is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# 9now is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with 9now.  If not, see <http://www.gnu.org/licenses/>.
-
 import xbmc
 import classes
 import config
@@ -67,7 +51,6 @@ def list_genres():
         g.thumb = (genre['image']['sizes']['w480'])
         g.genre_slug = genre['slug']
         g.title = genre['name']
-        g.genre = genre['name']
         listing.append(g)
     return listing
 

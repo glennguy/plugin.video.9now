@@ -1,16 +1,14 @@
 # flake8: noqa
-import version
 
 NAME = '9now'
-ADDON_ID = 'plugin.video.9now'
-VERSION = version.VERSION
+ADDON_ID = 'plugin.video.catchuptv.au.nine'
 
 GITHUB_API_URL = 'https://api.github.com/repos/glennguy/plugin.video.9now'
 ISSUE_API_URL = GITHUB_API_URL + '/issues'
 ISSUE_API_AUTH = 'eGJtY2JvdDo1OTQxNTJjMTBhZGFiNGRlN2M0YWZkZDYwZGQ5NDFkNWY4YmIzOGFj'
 GIST_API_URL = 'https://api.github.com/gists'
 
-CATEGORIES = ['TV Series', 'Genres', 'Live TV']
+CATEGORIES = ['Live TV', 'All Shows']
 GENRES_URL = "https://tv-api.9now.com.au/v1/genres?device=android&take=99999"
 TVSERIES_URL = "https://tv-api.9now.com.au/v1/tv-series?device=android&take=99999"
 EPISODEQUERY_URL = "https://tv-api.9now.com.au/v1/pages/tv-series/{0}/seasons/{1}?device=android"

@@ -4,7 +4,10 @@
     <setting id="HLSQUALITY" type="enum" label="32010" values="Lowest 480x270 (260k/s)|Low 640x360 (700k/s) |Medium 640x360 (1.3Mb/s)|High 1024x576 (2.0Mb/s)|Highest 1280x720 (2.7Mb/s)" default="4" />
   </category>
   <category label="32001">
+    <setting label="32035" type="action" action="RunPlugin(plugin://plugin.video.abc_iview/?action=sendreport)"/>
+    <setting label="32036" type="action" action="RunPlugin(plugin://plugin.video.abc_iview/?action=update_ia)"/>
     <setting label="32033" type="action" action="RunPlugin(plugin://plugin.video.9now/?action=reinstall_ssd_wv)"/>
     <setting label="32034" type="action" action="RunPlugin(plugin://plugin.video.9now/?action=reinstall_widevine_cdm)"/>
+    <setting id="ignore_drm" label="32037" type="bool" default="false" />
   </category>
 </settings>
