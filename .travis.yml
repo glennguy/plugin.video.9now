@@ -26,6 +26,7 @@ after_script:
          git commit --allow-empty -m "$TRAVIS_COMMIT_MSG" || travis_terminate 1;
      else
          ADDON_NAME="$(./get_addon_name.py ../)"
+         echo $ADDON_NAME
          git commit --allow-empty -m "Update $ADDON_NAME to $TRAVIS_TAG" || travis_terminate 1;
      fi'
   - git push
