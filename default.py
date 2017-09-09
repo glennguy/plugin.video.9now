@@ -73,3 +73,4 @@ def router(paramstring):
 
 if __name__ == '__main__':
     router(sys.argv[2][1:])
+
