@@ -12,8 +12,9 @@ script:
     ./manage_repo.py ../ || travis_terminate 1
   - |
     if [ -n "$TRAVIS_TAG" ]; then
+        cd ..
         git clone https://github.com/glennguy/repo.git .deploy-prod && \
-        cd .deploy && \
+        cd .deploy-prod && \
         ./manage_repo.py ../ || travis_terminate 1
     fi
 after_script:
