@@ -11,7 +11,7 @@
   </extension>
   <extension library="default.py" point="xbmc.addon.metadata">
     <summary>9now add-on</summary>
-    <description>Watch live TV and catch up on all videos offered by the 9now service.</description>
+    <description>Watch live TV and catch up on all videos offered by the 9now service</description>
     <provides>video</provides>
     <platform>all</platform>
   </extension>
