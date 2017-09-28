@@ -1,26 +1,25 @@
 language: python
 env:
   global:
-    - secure: "JTL6QtfeZFmqYPIhLJvg08ksXav7PUR9kpAVknve2KimDw7a09trnHmnA1y0+9h6V+adf50Gtw8XcIuhAt2GEZyPv2a/ygoHAfSx/6SuwVqxzLUrEeunRywhDFKouxZAzrd7gzaOUt6vBmCfshne3dTqN+As9LwVEkoYHGZNRSejliZnGW5YcNFTLAQFFN2R4SMa+S+PHvPXCnLNMZ7s6wp+EMNuvex82yyEmR36cHmu+yDWdkHCvB2rFyRmw8GUVlXV5jMzgLoWywsEZqs5MBO8l0VA8T/BIAZKTYPWTV22Nq2angltK1Nz2quPSZOUMSJrm+SZONvTp6prAlKhFwqpODeQXg2+rp3fIEqG+ST/uUbAgUpzMKxQYUq4i1AMlsI9J8NvlqWOM7jSDub+QIptuajgwCF8NhifitNiKLoEiLaF9S/4oUOeAyE/b+pmsxV9Hop1zxsUYy9IwkXAjxkXF7zyz7wgwr5I6UMQ/A5YAMWRQpnnmyOE9GOXF99JB0LCQSO7jIy2JweJWLbe8jRXecYhu5+JXX1q9e2VzIDM6fAStrUROdEYGTWCLvW4gKoinWMlxBgMEMSPyw64Qa/pfbIP4ugTAWGcwqJgvHWmzjfs3dYOWQ1MoK1M1NOMkomcAwJYM8IeP17j441YzQyWsMW3WHW4vy1S5ahFlUQ="
+    - secure: hiQzgKWkbw9FvIGIyz3f7xaDlZruOQdMIB+LfVNokKp5wOnB4q7VIElOgPS/2wbflnssdQP5tM0rhGtsfeQ/bfi1V9q8sT4f88xTuPFrr0mvZcytKcBzurWf0qfKA01A5QMVohk3g7Uy/I5uGda29wdKvOPmgOjtzu0jWYxxKL2c8U1nPZ6xdb84Ld3eoq8V8nfTMAF1MpFGzmrTfINYPYYArF8X9sPRRS/PlYmx7tM7Zh5XnaqwUzmBie0WaYDG94H7gPqN82h+R1gkZfsWqIzD7A0v1dIqTwO+wwdGcJO10PeZsueI1II1TyrMKWKSZJXL8Zf3WI8gyrqE4GArP3wWlFHmsWFwHTFsQV70k9fD8R1FN/CI1PTp8vn6VpyGclkFXpVwOICN9qDurHxaF4OcvovkzKV6CrHNu6HhPjWdtmRU3iYLJ6dcFaP/6mk7KTxNbSAl0QoArzLPeieVOd7Ka4gN8fyPQjpHwW1g7gvAOhTD9EPcC4QDNeCdJop/sdLpkf1PLiiy2yDrkcUntPCVpT+OfvDrgWIfzeqllr2aHvzLwU+Z6P1l3qFxNday2Bb6zq6QzUgLmSfbaKz5Tt+frbFUhdRrsUPJd/FsZNR3PRpEYfe2ZPH4LXBscuGk5ofAwbBRoda9ztaOL1ZW4tXuWzHrii6g9ayRsL7hjNA=
 install:
   - pip install GitPython
   - export TRAVIS_COMMIT_MSG="$TRAVIS_REPO_SLUG - $(git log --format=%B --no-merges -n 1)"
 script:
+  - [ "$TRAVIS_PULL_REQUEST" != "false" ] || travis_terminate 0
   - >
-    git clone https://github.com/glennguy/repo-devel.git .deploy && 
-    cd .deploy && 
-    ./manage_repo.py ../
+    git clone https://github.com/xbmc-catchuptv-au/repo-devel.git $TRAVIS_BUILD_DIR/.deploy && 
+    cd $TRAVIS_BUILD_DIR/.deploy && 
+    ./manage_repo.py $TRAVIS_BUILD_DIR/
   - |
     if [ -n "$TRAVIS_TAG" ]; then
-        cd ..
-        git clone https://github.com/glennguy/repo.git .deploy-prod && \
-        cd .deploy-prod && \
-        ./manage_repo.py ../ || travis_terminate 1
+        git clone https://github.com/xbmc-catchuptv-au/repo.git $TRAVIS_BUILD_DIR/.deploy-prod && \
+        cd $TRAVIS_BUILD_DIR/.deploy-prod && \
+        ./manage_repo.py $TRAVIS_BUILD_DIR/ || travis_terminate 1
     fi
-after_script:
   - git config --global user.email 'aussieaddons@aussieaddons.com'
   - git config --global user.name 'Aussie Add-ons Bot'
-  - cd ../.deploy
+  - cd $TRAVIS_BUILD_DIR/.deploy
   - git config credential.helper "store --file=.git/credentials"
   - echo "https://${GH_TOKEN}:@github.com" > .git/credentials
   - git add .
@@ -28,10 +27,10 @@ after_script:
   - git push
   - |
     if [ -n "$TRAVIS_TAG" ]; then
-        cd ../.deploy-prod
+        cd $TRAVIS_BUILD_DIR/.deploy-prod
         git config credential.helper "store --file=.git/credentials"
         echo "https://${GH_TOKEN}:@github.com" > .git/credentials
         git add . && \
-        git commit --allow-empty -m "Update $(basename `git -C ../ rev-parse --show-toplevel`) to $TRAVIS_TAG" && \
+        git commit --allow-empty -m "Update $(basename `git -C $TRAVIS_BUILD_DIR rev-parse --show-toplevel`) to $TRAVIS_TAG" && \
         git push || travis_terminate 1
     fi
