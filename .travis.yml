@@ -6,6 +6,7 @@ install:
   - pip install GitPython
   - export TRAVIS_COMMIT_MSG="$TRAVIS_REPO_SLUG - $(git log --format=%B --no-merges -n 1)"
 script:
+  - echo "$TRAVIS_PULL_REQUEST"
   - test "$TRAVIS_PULL_REQUEST" != "false" || travis_terminate 0
   - >
     git clone https://github.com/glennguy/repo-devel.git $TRAVIS_BUILD_DIR/.deploy && 
