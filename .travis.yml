@@ -1,12 +1,11 @@
 language: python
 env:
   global:
-    - secure: hiQzgKWkbw9FvIGIyz3f7xaDlZruOQdMIB+LfVNokKp5wOnB4q7VIElOgPS/2wbflnssdQP5tM0rhGtsfeQ/bfi1V9q8sT4f88xTuPFrr0mvZcytKcBzurWf0qfKA01A5QMVohk3g7Uy/I5uGda29wdKvOPmgOjtzu0jWYxxKL2c8U1nPZ6xdb84Ld3eoq8V8nfTMAF1MpFGzmrTfINYPYYArF8X9sPRRS/PlYmx7tM7Zh5XnaqwUzmBie0WaYDG94H7gPqN82h+R1gkZfsWqIzD7A0v1dIqTwO+wwdGcJO10PeZsueI1II1TyrMKWKSZJXL8Zf3WI8gyrqE4GArP3wWlFHmsWFwHTFsQV70k9fD8R1FN/CI1PTp8vn6VpyGclkFXpVwOICN9qDurHxaF4OcvovkzKV6CrHNu6HhPjWdtmRU3iYLJ6dcFaP/6mk7KTxNbSAl0QoArzLPeieVOd7Ka4gN8fyPQjpHwW1g7gvAOhTD9EPcC4QDNeCdJop/sdLpkf1PLiiy2yDrkcUntPCVpT+OfvDrgWIfzeqllr2aHvzLwU+Z6P1l3qFxNday2Bb6zq6QzUgLmSfbaKz5Tt+frbFUhdRrsUPJd/FsZNR3PRpEYfe2ZPH4LXBscuGk5ofAwbBRoda9ztaOL1ZW4tXuWzHrii6g9ayRsL7hjNA=
+    - secure: "HxWN6LO5tQRseijjhckiOLVv69hm6ipCAxt0L7TRgZjBg4Q5KposOzgo42+gvE4GGJWFHO+BJ6akWBloHjr35nz17RURHtA2EJJR+tfhUeBlFOrCtrf73DkmER9nccb20lHkYAxNMxH689Vn6BY0WjhCFa4PuSRWOz6PI6OliWyuvFbBkL0Qau00XWa4EtaZKbFuyUwA0UhbSqEl0kDpFa3D8eG0SH+tHHEXu3TpW42ZFOyLd2b/rQlFfnYNe2Q2pCMTCNgKNSDlENg4aPvH2X7FLpEeoBmv1aWX4UiRXqdJf0dDt+CkGFPAOm/OZ0Z+ivWs3V2VvgRr6+UmWo1iBZU9lTMzGoxkPpgNnniK9gz8goxC4+PZ8FOJTWdkcMdcRBOBULLzG1+aWYv14eJwINcvAWkUEW0jDzobCygxNcx6tW5Wu6Gp3nT5M/XKLnft6kxEkbiS3nPYdUWJa92eoOe9eh9GUfQPBjmcOvT5/01BOBADwrm+fQOF/Dax+HbY4pDCjzQXN5YdoJb2C+5w73xBxtC4chpyqqvdh4lpKGxt9j4XNLs8JQojXt4w5p9SEcax8bI6XQlAgOGXqDGmMR630vz0RnaBFwOPz7xTdhHW7B73Xhpq6m3b5+DYGXJ0qoqNELZa7/8Yi6nyWZiMDPk8G5nvMb5ce7txfqnVsvA="
 install:
   - pip install GitPython
   - export TRAVIS_COMMIT_MSG="$TRAVIS_REPO_SLUG - $(git log --format=%B --no-merges -n 1)"
 script:
-  - echo "$TRAVIS_PULL_REQUEST"
   - test "$TRAVIS_PULL_REQUEST" = "false" || travis_terminate 0
   - >
     git clone https://github.com/glennguy/repo-devel.git $TRAVIS_BUILD_DIR/.deploy && 
