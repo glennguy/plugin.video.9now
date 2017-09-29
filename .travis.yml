@@ -6,16 +6,16 @@ install:
   - pip install GitPython
   - export TRAVIS_COMMIT_MSG="$TRAVIS_REPO_SLUG - $(git log --format=%B --no-merges -n 1)"
 script:
-  - [ "$TRAVIS_PULL_REQUEST" != "false" ] || travis_terminate 0
+  - test "$TRAVIS_PULL_REQUEST" != "false" || travis_terminate 0
   - >
-    git clone https://github.com/xbmc-catchuptv-au/repo-devel.git $TRAVIS_BUILD_DIR/.deploy && 
+    git clone https://github.com/glennguy/repo-devel.git $TRAVIS_BUILD_DIR/.deploy && 
     cd $TRAVIS_BUILD_DIR/.deploy && 
-    ./manage_repo.py $TRAVIS_BUILD_DIR/
+    ./manage_repo.py $TRAVIS_BUILD_DIR
   - |
     if [ -n "$TRAVIS_TAG" ]; then
-        git clone https://github.com/xbmc-catchuptv-au/repo.git $TRAVIS_BUILD_DIR/.deploy-prod && \
+        git clone https://github.com/glennguy/repo.git $TRAVIS_BUILD_DIR/.deploy-prod && \
         cd $TRAVIS_BUILD_DIR/.deploy-prod && \
-        ./manage_repo.py $TRAVIS_BUILD_DIR/ || travis_terminate 1
+        ./manage_repo.py $TRAVIS_BUILD_DIR || travis_terminate 1
     fi
   - git config --global user.email 'aussieaddons@aussieaddons.com'
   - git config --global user.name 'Aussie Add-ons Bot'
