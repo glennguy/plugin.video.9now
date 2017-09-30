@@ -7,7 +7,7 @@ install:
   - export TRAVIS_COMMIT_MSG="$TRAVIS_REPO_SLUG - $(git log --format=%B --no-merges -n 1)"
 script:
   - test "$TRAVIS_PULL_REQUEST" = "false" || travis_terminate 0
-  - test "$TRAVIS_BRANCH" != "master" || travis_terminate 0
+  - test "$TRAVIS_BRANCH" = "master" || travis_terminate 0
   - >
     git clone https://github.com/glennguy/repo-devel.git $TRAVIS_BUILD_DIR/.deploy && 
     cd $TRAVIS_BUILD_DIR/.deploy && 
