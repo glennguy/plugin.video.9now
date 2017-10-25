@@ -1,23 +1,55 @@
-# plugin.video.9now
-Kodi add-on for Nine Network's 9now on demand catch-up service
+# 9Now add-on for Kodi
 
-## Requirements:
+http://aussieaddons.com/addons/nine/
 
-### Install the drm helper module [zip file](https://github.com/glennguy/script.module.drmhelper/archive/master.zip)
+This add-on provides a simple list of available programs from the 9Now catch-up TV service, and allows you to stream them within Kodi.
 
-## Widevine DRM
+The content is only available within Australia, but it may be possible to use this service outside of Australia by using Smart DNS or VPN geo-unblocking tools.
 
-Several programs are now protected with DRM, mainly big-ticket imported shows. Kodi 17/17.1 onwards is required to view DRM protected programs. Non-DRM protected shows are still watchable on Kodi 16.
+NOTE: If you are in Australia and are having issues streaming, you may need to disable any Smart DNS or VPN tools.
 
-For viewing protected shows you will need to have the inputstream-adaptive binary addon installed and enabled. The add-on will attempt to do this but at the moment it will only automatically happen with Windows and LibreELEC. For Linux you will need to either build it yourself or install it from a 3rd party repository. There is a 3rd party repository and pre-built binaries that you can use in the github repo here: https://github.com/vdrtuxnet/binary-repo . Installing the correct repo for your system and restarting Kodi should be enough, the add-on should then install inputstream.adaptive from there.
+## DRM
 
-The remaining components needed are the Widevine Content Decryption Module and Single Sample Decrypter Module.
+Some programs (generally non-Australian produced content) are not watchable due to Digital Rights Management (DRM) being enforced on them.
 
-The add-on will detect whether you have these installed and if needed download them to the correct location. For LibreELEC/Windows/Mac this is only a small download but for Linux there will be a ~50MB download to get the widevinecdm module. The SSD comes from my reposistory. This add-on has not yet been tested on Mac, and I have not build any SSD modules for OSX however if you can supply it it should be fine.
+There is a way to enable DRM support (using Widevine) in Kodi and we have successfully tested this, but it is complex and not ready for general use.
 
-## Installation:
-Download the [zip](https://github.com/glennguy/plugin.video.9now/archive/master.zip) file and install through Kodi's interface
+We are optimistic that DRM support will be available out of the box after the final release of Kodi 18.0
 
-## Help
+We have a helper add-on that will be installed with this addon to assist in getting set up automatically to play DRM protected content however some hardware/Kodi versions will not play nicely at the moment (notably Android running Kodi 17, Kodi 18 alphas will work however)
 
-Visit us on the [Aussie Addon Slack channel](http://slack-invite.aussieaddons.com/)
+If you're interested, please chat with us on our [Slack channel](http://slack-invite.aussieaddons.com/).
+
+## Installation
+
+Follow the Aussie Add-ons repository [installation guide](http://aussieaddons.com/installation/) to set
+up the Aussie Add-ons repository.
+
+Once the repository is installed, you can install the 9Now add-on through the Kodi Add-on manager by accessing the menus:
+
+ * System ->
+ * Settings ->
+ * Add-ons ->
+ * Install from repository ->
+ * Aussie Add-ons (or XBMC CatchupTV AU Add-ons) ->
+ * Video add-ons ->
+ * 9Now ->
+ * Install
+
+The Kodi wiki also has a nice guide on [installing Add-ons via the Add-on manager](http://kodi.wiki/view/Add-on_manager).
+
+Installing directly is not supported, unless you have the Aussie Add-ons/XBMC CatchupTV AU repository already configured, as this add-on has some dependencies that must be installed before it will work.
+
+
+## Issues
+
+For any issues or bug reports, please file them on the [issues page](https://github.com/xbmc-catchuptv-au/plugin.video.catchuptv.au.nine/issues).
+
+Please include log output, if possible. Follow the [log upload guide](http://kodi.wiki/view/Log_file/Easy) and include the URL it gives you in your bug report.
+
+
+## Contact
+
+For help and support, feel free to register on our [Slack channel](http://slack-invite.aussieaddons.com/).
+
+Good luck and happy viewing.

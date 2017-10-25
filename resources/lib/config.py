@@ -1,9 +1,6 @@
 # flake8: noqa
 
-NAME = '9now'
-ADDON_ID = 'plugin.video.catchuptv.au.nine'
-
-GITHUB_API_URL = 'https://api.github.com/repos/glennguy/plugin.video.9now'
+GITHUB_API_URL = 'https://api.github.com/repos/xbmc-catchuptv-au/plugin.video.catchuptv.au.nine'
 ISSUE_API_URL = GITHUB_API_URL + '/issues'
 ISSUE_API_AUTH = 'eGJtY2JvdDo1OTQxNTJjMTBhZGFiNGRlN2M0YWZkZDYwZGQ5NDFkNWY4YmIzOGFj'
 GIST_API_URL = 'https://api.github.com/gists'

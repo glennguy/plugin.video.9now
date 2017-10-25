@@ -1,39 +1,39 @@
-import xbmc
 import classes
 import config
-import urllib2
 import json
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
+
+from aussieaddonscommon import session
+
+
+def fetch_url(url, headers={}):
+    """
+    Use custom session to grab URL and return the text
+    """
+    with session.Session(force_tlsv1=True) as sess:
+        res = sess.get(url, headers=headers)
+        return res.text
 
 
 def list_series():
     """
     Create and return list of series objects
     """
-    req = config.TVSERIES_URL
-    res = urllib2.urlopen(req)
-    data = json.loads(res.read())
+    res = fetch_url(config.TVSERIES_URL)
+    data = json.loads(res)
     listing = []
     for show in data['items']:
-        x = len(show['containsSeason'])
-        if x > 1:
-            multi_season = True
-        else:
-            multi_season = False
-        while x >= 1:
+        for season in reversed(show['containsSeason']):
             s = classes.series()
-            s.multi_season = multi_season
-            s.season_slug = show['containsSeason'][x-1]['slug']
+            s.multi_season = len(show['containsSeason']) > 1
+            s.season_slug = season['slug']
             s.series_name = show['name']
-            s.season_name = show['containsSeason'][x-1]['name']
-            s.series_slug = show['containsSeason'][x-1]['partOfSeries']['slug']
+            s.season_name = season['name']
+            s.series_slug = season['partOfSeries']['slug']
             s.fanart = show['image']['sizes']['w1920']
-            s.thumb = show['containsSeason'][x-1]['image']['sizes']['w480']
-            s.genre = show['containsSeason'][x-1]['genre']['name']
+            s.thumb = season['image']['sizes']['w480']
+            s.genre = season['genre']['name']
             s.title = s.get_title()
             listing.append(s)
-            x -= 1
     return listing
 
 
@@ -41,9 +41,8 @@ def list_genres():
     """
     Create and return list of genre objects
     """
-    req = config.GENRES_URL
-    res = urllib2.urlopen(req)
-    data = json.loads(res.read())
+    res = fetch_url(config.GENRES_URL)
+    data = json.loads(res)
     listing = []
     for genre in data['items']:
         g = classes.genre()
@@ -59,11 +58,9 @@ def list_episodes(params):
     """
     Create and return list of episode objects
     """
-    requrl = config.EPISODEQUERY_URL.format(params['series_slug'],
-                                            params['season_slug'])
-    req = urllib2.Request(requrl)
-    xbmc.log('Fetching URL: {}'.format(requrl))
-    res = urllib2.urlopen(req).read()
+    url = config.EPISODEQUERY_URL.format(
+        params['series_slug'], params['season_slug'])
+    res = fetch_url(url)
     data = json.loads(res)
     listing = []
     for section in data['items']:
@@ -100,10 +97,7 @@ def list_live(params):
     """
     Create and return list of channel objects
     """
-    requrl = config.LIVETV_URL
-    req = urllib2.Request(requrl)
-    xbmc.log('Fetching URL: {0}'.format(requrl))
-    res = urllib2.urlopen(req).read()
+    res = fetch_url(config.LIVETV_URL)
     data = json.loads(res)
     listing = []
     for channel in data['channels']:
@@ -121,9 +115,7 @@ def list_live(params):
 def get_stream(url, live=False):
     """Parse live tv JSON and return stream url
     """
-    req = urllib2.Request(url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY})
-    xbmc.log('Fetching URL: {}'.format(url))
-    res = urllib2.urlopen(req).read()
+    res = fetch_url(url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY})
     data = json.loads(res)
     if live:
         return data['sources'][0]['src']
@@ -142,10 +134,7 @@ def get_widevine_auth(drm_url):
     """
     Parse DRM JSON and return license auth URL and manifest URL
     """
-    req = urllib2.Request(
-        drm_url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY})
-    xbmc.log('Fetching URL: {}'.format(drm_url))
-    res = urllib2.urlopen(req).read()
+    res = fetch_url(drm_url, headers={'BCOV-POLICY': config.BRIGHTCOVE_KEY})
     data = json.loads(res)
     for source in data['sources']:
         if 'com.widevine.alpha' in source['key_systems']:

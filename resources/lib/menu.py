@@ -39,8 +39,8 @@ def list_categories():
         listing.append(('{0}?action=settings'.format(_url), li, is_folder))
         xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
         xbmcplugin.endOfDirectory(_handle)
-    except Exception as e:
-        utils.handle_error('Unable to list categories', exc=e)
+    except Exception:
+        utils.handle_error('Unable to list categories')
 
 
 def make_episodes_list(url):
@@ -66,8 +66,8 @@ def make_episodes_list(url):
 
         xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
         xbmcplugin.endOfDirectory(_handle)
-    except Exception as e:
-        utils.handle_error('Unable to list episodes', exc=e)
+    except Exception:
+        utils.handle_error('Unable to list episodes')
 
 
 def make_live_list(url):
@@ -89,8 +89,8 @@ def make_live_list(url):
 
         xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
         xbmcplugin.endOfDirectory(_handle)
-    except Exception as e:
-        utils.handle_error('Unable to list channels', exc=e)
+    except Exception:
+        utils.handle_error('Unable to list channels')
 
 
 def make_series_list(url):
@@ -119,5 +119,5 @@ def make_series_list(url):
             _handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
         xbmcplugin.addDirectoryItems(_handle, listing, len(listing))
         xbmcplugin.endOfDirectory(_handle)
-    except Exception as e:
-        utils.handle_error('Unable to list series', exc=e)
+    except Exception:
+        utils.handle_error('Unable to list series')

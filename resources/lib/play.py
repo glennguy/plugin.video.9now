@@ -76,7 +76,7 @@ def play_video(params):
         play_item = xbmcgui.ListItem(path=url)
 
     elif params['drm'] == 'True':
-        if xbmcaddon.Addon.getSetting('ignore_drm') == 'false':
+        if xbmcaddon.Addon().getSetting('ignore_drm') == 'false':
             if not drmhelper.check_inputstream():
                 return
         acc = config.BRIGHTCOVE_ACCOUNT

@@ -16,13 +16,6 @@ sys.path.append(BASE_RESOURCE_PATH)
 import menu  # noqa: E402
 import play  # noqa: E402
 
-_url = sys.argv[0]
-_handle = int(sys.argv[1])
-
-addonname = addon.getAddonInfo('name')
-addon_path = xbmcaddon.Addon().getAddonInfo("path")
-fanart = os.path.join(addon_path, 'fanart.jpg')
-
 
 def router(paramstring):
     """
@@ -54,14 +47,14 @@ def router(paramstring):
             elif params['action'] == 'sendreport':
                 utils.user_report()
             elif params['action'] == 'update_ia':
-                addon = drmhelper.get_addon(drm=False)
+                addon = drmhelper.get_addon(drm=True)
                 if not drmhelper.is_ia_current(addon, latest=True):
                     if xbmcgui.Dialog().yesno(
                         'Upgrade?', ('Newer version of inputstream.adaptive '
                                      'available ({0}) - would you like to '
                                      'upgrade to this version?'.format(
                                         drmhelper.get_latest_ia_ver()))):
-                        drmhelper.get_ia_direct(update=True, drm=False)
+                        drmhelper.get_ia_direct(update=True, drm=True)
                 else:
                     ver = addon.getAddonInfo('version')
                     utils.dialog_message('Up to date: Inputstream.adaptive '
